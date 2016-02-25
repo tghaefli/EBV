@@ -1,5 +1,7 @@
 Blooming: zu viele Photonen --> Elektronen laufen über in benachbarte Zellen
 
+
+
 CCD:	Schlecht für helle Bereiche, da Blooming
 		Langsam, da nur 1 auswerter vorhanden
 		Höhere Sensitivität
@@ -9,3 +11,32 @@ CMOS:	Jedes Pixel hat eigene Auswertung
 
 Rolling Shutter:	Nur 1 Streifen pro Zeit wird belichtet
 Glooming Shutter:	Gesammtes Photo pro Zeit
+
+Sensor berechnung:
+10mm x 10mm mit 1000x1000 pixel (1M pixel)  ==> 10um / pixel
+10mm x 10mm mit 2000x2000 pixel (4M pixel)  ==>  5um / pixel
+
+Normale Norm: I(m,n)
+I(0,0)  ....... I(0,N-1)
+  .					.
+  .					.
+I(M-1,0)  ..... I(M-1,N-1)
+
+
+Matlab:
+I(1,1)  ....... I(1,N)
+  .					.
+  .					.
+I(M,1)  ....... I(M,N)
+
+
+Für uint:
+bitshift(bitshift(picture,-1),1) anstatt 2*(picture/2)
+
+b: Bildweite
+g: Gegenstandsweite
+f: Brennweite (definiert)
+
+1/g + 1/b = 1/f
+
+
