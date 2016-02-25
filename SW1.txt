@@ -33,10 +33,38 @@ I(M,1)  ....... I(M,N)
 Für uint:
 bitshift(bitshift(picture,-1),1) anstatt 2*(picture/2)
 
+
+Formel:
 b: Bildweite
 g: Gegenstandsweite
 f: Brennweite (definiert)
+G: reale Grösse von z.B. Mensch
+B: transformierte Grösse von z.B. Mensch auf der Linse
 
 1/g + 1/b = 1/f
+G/g = B/b
+B/G = b/g ~ f/g (Näherung)
+
+
+Aufgabe:
+f = 4.1mm - 73.8mm
+g = 9m
+1/4 Zoll = 3.6mm x 2.7mm
+704pix x 576pix
+
+b = g*f/(b-f) = 74.4mm ==> b ~ f
+Sensorpixel: 4.69um x 5.11um
+
+G = B*g/b = 5.11um * 9000mm/74.4mm = 0.62mm Auflösung
+1 Pixel ist in der Realität 0.62mm gross bei 9m entfernung.
+
+
+
+Wichtig: Augen, Sensoren haben jeweils ein Lux-Fenster und zeigen dies in uint an.
+z.B. Durchschnittliche Helligkeit ist 10^x Lux -->
+	Sensor hat 10^(x-1) Lux bis 10^(x+1) Lux
+
+
+
 
 
