@@ -1,0 +1,11 @@
+Blooming: zu viele Photonen --> Elektronen laufen über in benachbarte Zellen
+
+CCD:	Schlecht für helle Bereiche, da Blooming
+		Langsam, da nur 1 auswerter vorhanden
+		Höhere Sensitivität
+
+CMOS:	Jedes Pixel hat eigene Auswertung
+		Kein Blooming
+
+Rolling Shutter:	Nur 1 Streifen pro Zeit wird belichtet
+Glooming Shutter:	Gesammtes Photo pro Zeit
