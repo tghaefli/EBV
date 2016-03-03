@@ -6,3 +6,7 @@
 
 # ignore temporary editor files
 *.swp
+
+
+Autobahn.zip
+*/Autobahn/*
