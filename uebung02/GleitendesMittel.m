@@ -2,7 +2,7 @@ clear 'all';
 close 'all';
 
 %path were pictures are stored
-Path = '.\Autobahn\img_';
+Path = 'img_';
 
 %this is the delta of the step
 Delta = 1;
@@ -10,7 +10,7 @@ Delta = 1;
 %parameter structure
 Params = struct();
 Params.AvgFactor = 0.95;%the average factor determines the speed of adaptation 
-Params.Threshold = 10;%this is the threshold value (chosen manually)
+Params.Threshold = 30;%this is the threshold value (chosen manually)
 
 %read first image to index 0
 Index = 0;
@@ -47,6 +47,8 @@ for Index = Delta:Delta:200
     ImgTitle = strcat('foreground image');
     title(ImgTitle);
     
+    %pause(0.00001);
+    drawnow();
 end
 
 %save the background image at the end

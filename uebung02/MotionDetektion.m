@@ -4,7 +4,7 @@ close 'all';
 global Threshold
 
 %path were pictures are stored
-Path = 'Autobahn\img_';
+Path = 'img_';
 %path where image with large changes should be stored
 ChangePath = 'Changes_img_';
 %counter for image saved
@@ -26,8 +26,7 @@ for Index = Delta:Delta:400
     ImageAct = imread(FileName);
     
     %call function
-    [ThreshImage, DiffImage] = MotionDetektionFunct(ImageAct, ImageOld);
-   
+    [ThreshImage, DiffImage] = MotionDetektionFunct(ImageAct, ImageOld);    
    
     %plot current image
     figure(1);subplot(2,2,1);
@@ -56,5 +55,8 @@ for Index = Delta:Delta:400
    
     %set 'new' old image
     ImageOld = ImageAct;
+    
+    drawnow();
+    %pause(0);
 
 end
