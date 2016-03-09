@@ -3,8 +3,8 @@ Blooming: zu viele Photonen --> Elektronen laufen über in benachbarte Zellen
 
 
 CCD:	Schlecht für helle Bereiche, da Blooming
-		Langsam, da nur 1 auswerter vorhanden
-		Höhere Sensitivität
+		Langsam, da nur 1 Auswerter vorhanden
+		Höhere sensitivität
 
 CMOS:	Jedes Pixel hat eigene Auswertung
 		Kein Blooming

@@ -4,7 +4,7 @@ close 'all';
 global Threshold
 
 %path were pictures are stored
-Path = 'img_';
+Path = './Autobahn/img_';
 %path where image with large changes should be stored
 ChangePath = 'Changes_img_';
 %counter for image saved
