@@ -1,5 +1,6 @@
-clear 'all';
-close 'all';
+clear all;
+close all;
+clc;
 
 %read image
 Image = imread('London.png');
@@ -10,22 +11,33 @@ subplot(2,2,1);
 imshow(Image);
 title('Original');
 
+
+
 %apply a filter of size 2x2
-Image1 = Image;%?????
+filter1 = 1/(2^2)*ones(2,2);
+Image1 = imfilter(Image, filter1, 'same');
 %plot 
 subplot(2,2,2);
 imshow(Image1);
 title('2 x 2 Filter');
 
 %apply a filter of size 4x4
-Image2 = Image;%?????
+Image2 = imfilter(Image, ones(3)/(3^2), 'same');
 %plot
 subplot(2,2,3);
 imshow(Image2);
 title('4 x 4 Filter');
 
 %apply a filter of size 8x8
-Image3 = Image;%?????
+%Image3 = imfilter(Image, ones(4)/(4^2), 'same');       % 16 op/pixel
+
+Image3_tmp = double(imfilter(Image,1/4*ones(1,4)));     
+Image3 = uint8(conv2(Image3_tmp,1/4*ones(4,1)));        % total of 8 op/pixel
+
+%Mask [1,2,1]/4 * [1,2,1]'/4
+Image3_tmp = double(imfilter(Image,1/4*[1,2,1]));
+Image3 = uint8(conv2(Image3_tmp,1/4*[1,2,1]'));        % total of 6 op/pixel
+
 %plot
 subplot(2,2,4);
 imshow(Image3);
