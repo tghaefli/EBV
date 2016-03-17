@@ -1,11 +1,13 @@
 close all; clear all; clc;
 
 
-Img = imread('./Images/Image_012.png');
+Img = double(imread('./Images/Image_001.png'));	% We work with double !!!
 
 % Define options
-dx = [-1 0 1 ; -1 0 1 ; -1 0 1]; dy = dx';
-Th_deriv = 12;		% 
+dx = [-1 0 1 ; -1 0 1 ; -1 0 1]; dy = dx';		% Prewitt
+%dx = [-1 0 1 ; -2 0 2 ; -1 0 1]; dy = dx';		% Sobbel
+
+Th_deriv = 12;	
 
 size_Morph = 5;
 
@@ -48,12 +50,15 @@ title('Skeleton');
 
 
 % ************************ ANGLE ************************
+A.Angle
 
-% Because matlab can't show angle correct under linux
-%figure(2);
-%figure(3);
+figure(2)
+imshow(A.Img_Angle, []);
+map=colormap(jet);
+map(1,:) = 0;
+colormap(map)
+colorbar;
 
+title(strcat('Current Angle: ',num2str(A.Angle),'°'));
 
-
-A.Angle;
 
