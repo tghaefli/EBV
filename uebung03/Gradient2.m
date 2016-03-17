@@ -39,7 +39,7 @@ title('dI/dr');
 Angle = pi+atan2(ImageDy, ImageDx);
 %use only those values that are above a given threshold
 
-Angel(ImageDr < 40) = 0;
+Angel(ImageDr < 40) = 0;	% Write result in ImageDr directly, without any assignment
 
 % plot it
 % Buggy for linux
