@@ -1,5 +1,7 @@
-clear 'all'
-close 'all';
+clear all
+close all;
+clc;
+
 
 Cmap = colormap(jet);
 Cmap(1,:) = 0;
@@ -21,20 +23,26 @@ subplot(2,2,2);
 imshow(ImageThr, [0 1]);
 title('Threshold');
 
+
+
+diam = 4;
 %define the structure element ????
-StrucElem = 1;
+StrucElem = strel('disk',diam);
 
 %do a closure ????
-ImageClose = ImageThr;
+ImageClose = imclose(ImageThr, StrucElem);
+%ImageClose = ImageThr;
 
 %plot 
 subplot(2,2,3);
 imshow(ImageClose);
 title('Closure');
 
-StrucElem = 1; %?????
+
+StrucElem = strel('disk',15);
 %do erosions ??????
-ImageErode = ImageClose;
+ImageErode = imerode(ImageClose, StrucElem);
+%ImageErode = ImageThr;
 %plot 
 subplot(2,2,4);
 imshow(ImageErode);

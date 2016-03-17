@@ -1,8 +1,9 @@
-clear 'all';
-close 'all';
+clear all;
+close all;
+clc;
 
 %read image
-Image = imread('..\uebung01\London.png');
+Image = imread('London.png');
 
 %plot the image
 figure(1);
@@ -21,9 +22,12 @@ subplot(2,2,2);
 imshow(ImageNoise);
 title('salt & pepper noise, 7%');
 
-%apply a median filter; 3x3 is enough because noise is only one pixel wide
-%??????????????????
-ImageMedian = ImageNoise;
+%apply a median filter
+N = 9;
+ImageMedian = medfilt2(ImageNoise, [N N]);
+ImageMedian = ordfilt2(ImageNoise, round(N^2/2), ones(N,N)); 
+
+
 %plot
 subplot(2,2,3);
 imshow(ImageMedian);

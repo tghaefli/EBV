@@ -11,8 +11,10 @@ imshow(Image);
 title('Original');
 
 %define the structure element
-%??????????????
-StrucElem = 1;
+StrucElem = ones(5,3);
+StrucElem = ones(5,1);
+StrucElem = eye(5);
+
 
 %plot it (we use imdilate to plot the structure element)
 subplot(2,2,2);

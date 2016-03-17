@@ -1,5 +1,9 @@
-clear 'all';
-close 'all';
+clear all;
+close all;
+clc;
+
+% min = schwarz
+% max = weiss
 
 
 %%%%%%%%%%%%%% image creation %%%%%%%%%%%%%%%%
@@ -41,12 +45,15 @@ imshow(ImgHill);
 title('Image with "hills"');
 
 %apply min/max filter ????????????????
-MinVal = ImgValley;
-MaxVal = ImgHill;
+N = 900;
+%N = SizeRegion;
 
-%find local min/max values ?????????????????????
-LocMin = (MinVal == 100);
-LocMax = (MaxVal == 200);
+MinVal = ordfilt2(ImgValley , 1 , ones(N)); %chose element nr1 (smallest one)
+MaxVal = ordfilt2(ImgHill , N^2 , ones(N)); %chose element N*N (biggest one)
+
+%find local min/max values
+LocMin = (MinVal == ImgValley);
+LocMax = (MaxVal == ImgHill);
 
 %plot everything
 figure(2);

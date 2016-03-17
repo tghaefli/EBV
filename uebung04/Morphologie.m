@@ -1,5 +1,7 @@
-clear 'all';
-close 'all';
+clear all;
+close all;
+clc;
+
 
 %read image (is logical)
 Image = imread('Morphologie.bmp');
@@ -12,7 +14,12 @@ title('Original');
 
 %define the structure element
 %??????????????
-StrucElem = 1;
+StrucElem = eye(3);
+StrucElem = ones(1,5);  % Add(dilataion) or remove(erosion) 2 Pixel in horizontal direction
+StrucElem = ones(5,1);  % Add(dilataion) or remove(erosion) 2 Pixel in horizontal direction
+%StrucElem = ones(3);   % Add(dilataion) or remove(erosion) 1 Pixel
+%StrucElem = ones(5);   % Add(dilataion) or remove(erosion) 2 Pixel
+%StrucElem = [1 1 1 ; 0 0 1 ; 0 0 1 ]  % Ref.-Punkt ist in der Mitte, jedoch nicht true
 
 %plot it (we use imdilate to plot the structure element)
 subplot(2,2,2);
@@ -40,5 +47,4 @@ Help(Image ~= ImageErode) = 128;
 %plot
 subplot(2,2,4);
 imshow(Help, []);
-title('Erosion');
-
+title('Erosion - white:leftover / grey:removed');

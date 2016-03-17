@@ -14,8 +14,9 @@ title('Original');
 
 %define the filter ??????
 Beta = 0.5;
-Mask = [1];
+Mask = [0,-1,0 ; -1,4,-1 ; 0,-1,0];
 
+Mask = 1/(length(Mask)^2)*ones(length(Mask),length(Mask)) + Beta*Mask;
 %apply the filter
 ImageEnh = imfilter(Image, Mask);
 
