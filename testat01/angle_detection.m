@@ -2,11 +2,11 @@ function A = angle_detection(Img, opt)
 
 
 % *********************** GRADIENT ***********************
-if (length(opt.FilterType) == 7 && opt.FilterType == 'Prewitt')
+if (strcmp(opt.FilterType,'Prewitt'))
     dy = fspecial('prewitt');
-elseif (length(opt.FilterType) == 5 && opt.FilterType == 'Sobel')
+elseif (strcmp(opt.FilterType,'Sobel'))
     dy = fspecial('sobel');
-elseif (length(opt.FilterType) == 3 && opt.FilterType == 'Big')
+elseif (strcmp(opt.FilterType,'Big'))
 	dy = conv2([1 2 1 2 1],[1;1;0;-1;-1]);
 else
     dy = [1];
@@ -31,7 +31,7 @@ Img_Morph = ordfilt2(Img_Grad, round(N^2/2), ones(N,N));
 % *********************** SKELETON ***********************
 %requires binary image
 Img_Skelet = (Img_Morph > 0);					% Generate binary picture
-if(length(opt.Closing) == 4 && opt.Closing == 'true' && opt.Closing_Dim>=1)
+if(strcmp(opt.Closing, 'true') & opt.Closing_Dim>=1)
 	Img_Skelet = imclose(Img_Skelet,ones(opt.Closing_Dim));
 end
 Img_Skelet = uint8(bwmorph(Img_Skelet, 'thin', Inf));	
@@ -81,7 +81,7 @@ disp(strcat('090° : ',num2str(ctr_90)));
 disp(strcat('135° : ',num2str(ctr_135)));
 
 
-[max index] = max([ctr_0 ; ctr_45 ; ctr_90 ; ctr_135]);
+[max_ctr index] = max([ctr_0 ; ctr_45 ; ctr_90 ; ctr_135]);
 
 if(index == 1)
 	Angle = 0;

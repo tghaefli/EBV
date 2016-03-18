@@ -1,12 +1,12 @@
 close all; clear all; clc;
 
-Img = uint8(imread('./Images/Image_007.png'));
+Img = uint8(imread('./Images/Image_002.png'));
 
 % ************************ OPTIONS ************************
 options = struct();
 options.FilterType = 'Prewitt';
-options.Th_deriv = 15;			% Top    left  picture
-options.Dim_Morph = 4;			% Bottom left  picture
+options.Th_deriv = 16;			% Top    right  picture
+options.Dim_Morph = 5;			% Bottom left  picture
 options.Closing = 'true';		% Bottom right picture
 options.Closing_Dim = 10;		%   --> Imporve skeleton drawing
 
@@ -42,5 +42,4 @@ map(1,:) = 0;
 colormap(map)
 colorbar;
 title(strcat('Angle: ',num2str(A.Angle),'°'));
-
 
