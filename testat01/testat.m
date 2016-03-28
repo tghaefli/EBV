@@ -1,11 +1,17 @@
 % Author:   Fabian Niederberger
 %           Pascal Häfliger
 % Date:     2016-03-28
+% Software: Octave 3.8.1 with package 'image'
 
 close all; clear all; clc;
 
+% ********************** READ IMAGE **********************
+Path = './Images/Image_';
+Nr = 003;
+FileName = strcat(Path, sprintf('%03d', Nr), '.png');
+Img = uint8(imread(FileName));
 
-Img = uint8(imread('./Images/Image_003.png'));
+
 
 % ************************ OPTIONS ************************
 options = struct();
@@ -19,6 +25,7 @@ options.Closing_Dim = 10;		%   --> Imporve skeleton drawing
 
 % ********************* CALL FUNCTION *********************
 A = angle_detection(Img, options);
+
 
 
 % ************************* PLOTS *************************
@@ -48,3 +55,18 @@ colormap(map)
 colorbar;
 title(strcat('Angle: ',num2str(A.Angle),'°'));
 
+drawnow();
+
+
+%% ************************ TEST ************************
+for Nr=1:15
+
+    FileName = strcat(Path, sprintf('%03d', Nr), '.png');
+    Img = uint8(imread(FileName));
+    A = angle_detection(Img, options);
+
+    res(Nr,1) = Nr;
+    res(Nr,2) = A.Angle;
+end
+
+res
