@@ -3,15 +3,13 @@ function A = angle_detection(Img, opt)
 
 % *********************** GRADIENT ***********************
 if (strcmp(opt.FilterType,'Prewitt'))
-    dy = fspecial('prewitt');
+    dx = fspecial('prewitt')';
 elseif (strcmp(opt.FilterType,'Sobel'))
-    dy = fspecial('sobel');
-elseif (strcmp(opt.FilterType,'Big'))
-	dy = conv2([1 2 1 2 1],[1;1;0;-1;-1]);
+    dx = fspecial('sobel')';
 else
-    dy = [1];
+    dx = [1];
 end
-dx = dy';
+dy = dx';
 
 Img_dx = imfilter(Img, dx);
 Img_dy = imfilter(Img, dy);
@@ -30,20 +28,19 @@ Img_Morph = ordfilt2(Img_Grad, round(N^2/2), ones(N,N));
 
 % *********************** SKELETON ***********************
 %requires binary image
-Img_Skelet = (Img_Morph > 0);					% Generate binary picture
-if(strcmp(opt.Closing, 'true') & opt.Closing_Dim>=1)
+Img_Skelet = (Img_Morph > 0);	% Generate binary picture
+if(strcmp(opt.Closing, 'true') && opt.Closing_Dim>1)
 	Img_Skelet = imclose(Img_Skelet,ones(opt.Closing_Dim));
 end
 Img_Skelet = uint8(bwmorph(Img_Skelet, 'thin', Inf));	
 
 
 % ************************ ANGLE ************************
-Img_dx_Skel = imfilter(Img_Skelet, dx);
-Img_dy_Skel = imfilter(Img_Skelet, dy);
+Img_dx_Skel = imfilter(double(Img_Skelet), dx);
+Img_dy_Skel = imfilter(double(Img_Skelet), dy);
 
-
-Img_Angle = atan2(double(Img_dy_Skel), double(Img_dx_Skel));	% atan2 can't work with binary
-
+Img_Angle = pi+atan2(Img_dy_Skel, Img_dx_Skel) ;	% atan2 can't work with binary
+% Img_Angle is [0:2*pi]
 
 ctr_0 = 0;
 ctr_45 = 0;
@@ -54,25 +51,35 @@ ctr_135 = 0;
 
 for n=1:sx
 	for m=1:sy
-
-		if(Img_Angle(n,m) < 0.1)
-
-		elseif(Img_Angle(n,m) < 22.5*pi/180)
+		if((Img_Angle < (pi+0.5)) && (Img_Angle > (pi-0.5)))
+			%This is the background, we don't count the bakground!
+		% [0:pi]
+		elseif((Img_Angle(n,m) < pi/8))
 			ctr_0 = ctr_0+1;
-		elseif (Img_Angle(n,m) < 67.5*pi/180)
+		elseif (Img_Angle(n,m) < 3*pi/8)
 			ctr_45 = ctr_45+1;
-		elseif (Img_Angle(n,m) < 112.5*pi/180)
+		elseif (Img_Angle(n,m) < 5*pi/8)
 			ctr_90 = ctr_90+1;
-		elseif (Img_Angle(n,m) < 157.5*pi/180)
+		elseif (Img_Angle(n,m) < 7*pi/8)
 			ctr_135 = ctr_135+1;
-		elseif (Img_Angle(n,m) < 180*pi/180)
+		elseif (Img_Angle(n,m) < 9*pi/8)
+			ctr_0 = ctr_0+1;
+
+		% [pi:2pi]
+		elseif (Img_Angle(n,m) < 11*pi/8)
+			ctr_45 = ctr_45+1;
+		elseif (Img_Angle(n,m) < 13*pi/8)
+			ctr_90 = ctr_90+1;
+		elseif (Img_Angle(n,m) < 15*pi/8)
+			ctr_135 = ctr_135+1;
+		elseif (Img_Angle(n,m) < 16*pi/8)
 			ctr_0 = ctr_0+1;
 		else
-			disp('ERROR!!!');
-		end
-
+			%disp('ERROR!!!');
+		endif
 	end	%m
 end	%n
+
 
 % Debug purpose
 disp(strcat('000° : ',num2str(ctr_0)));

@@ -1,13 +1,14 @@
 close all; clear all; clc;
 
-Img = uint8(imread('./Images/Image_002.png'));
+%Img = uint8(imread('./Images/Image_004.png'));
+Img = double(imread('./Images/Image_004.png'));
 
 % ************************ OPTIONS ************************
 options = struct();
 options.FilterType = 'Prewitt';
-options.Th_deriv = 16;			% Top    right  picture
-options.Dim_Morph = 5;			% Bottom left  picture
-options.Closing = 'true';		% Bottom right picture
+options.Th_deriv = 15;			% Top    right  picture
+options.Dim_Morph = 4;			% Bottom left  picture
+options.Closing = 'false';		% Bottom right picture
 options.Closing_Dim = 10;		%   --> Imporve skeleton drawing
 
 
