@@ -1,7 +1,11 @@
+% Author:   Fabian Niederberger
+%           Pascal Häfliger
+% Date:     2016-03-28
+
 close all; clear all; clc;
 
-%Img = uint8(imread('./Images/Image_004.png'));
-Img = double(imread('./Images/Image_004.png'));
+
+Img = uint8(imread('./Images/Image_003.png'));
 
 % ************************ OPTIONS ************************
 options = struct();

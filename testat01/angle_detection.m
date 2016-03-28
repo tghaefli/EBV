@@ -40,7 +40,9 @@ Img_dx_Skel = imfilter(double(Img_Skelet), dx);
 Img_dy_Skel = imfilter(double(Img_Skelet), dy);
 
 Img_Angle = pi+atan2(Img_dy_Skel, Img_dx_Skel) ;	% atan2 can't work with binary
-% Img_Angle is [0:2*pi]
+Img_Angle_Grad = (Img_dx_Skel.^2 + Img_dy_Skel.^2).^0.5;
+
+Img_Angle(Img_Angle_Grad < 0.5) = 0;
 
 ctr_0 = 0;
 ctr_45 = 0;
@@ -51,7 +53,8 @@ ctr_135 = 0;
 
 for n=1:sx
 	for m=1:sy
-		if((Img_Angle < (pi+0.5)) && (Img_Angle > (pi-0.5)))
+
+		if(Img_Angle(n,m) < 0.5)
 			%This is the background, we don't count the bakground!
 		% [0:pi]
 		elseif((Img_Angle(n,m) < pi/8))
@@ -74,9 +77,8 @@ for n=1:sx
 			ctr_135 = ctr_135+1;
 		elseif (Img_Angle(n,m) < 16*pi/8)
 			ctr_0 = ctr_0+1;
-		else
 			%disp('ERROR!!!');
-		endif
+		end
 	end	%m
 end	%n
 
