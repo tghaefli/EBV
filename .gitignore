@@ -1,12 +1,8 @@
-# ignore leanx stuff
 /leanx/*
-
-# ignore ASV
 *.asv
-
-# ignore temporary editor files
 *.swp
-
+*.m~
 
 Autobahn.zip
 */Autobahn/*
+testat01_Pascal_Haefliger.zip
