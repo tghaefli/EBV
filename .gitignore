@@ -2,6 +2,7 @@
 *.asv
 *.swp
 *.m~
+app
 
 Autobahn.zip
 */Autobahn/*
