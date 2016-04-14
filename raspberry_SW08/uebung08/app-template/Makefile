@@ -90,7 +90,7 @@ endif
 
 BINARIES := $(addsuffix _host, $(PRODUCTS)) $(addsuffix _target, $(PRODUCTS))
 
-.PHONY: all clean host target install deploy run reconfigure settime
+.PHONY: all clean host target install deploy run reconfigure settime kill
 all: $(BINARIES)
 host target: %: $(addsuffix _%, $(PRODUCTS))
 
@@ -107,6 +107,10 @@ ifeq '$(CONFIG_BOARD)' 'raspi-cam'
 	ssh pi@192.168.1.10 sudo date -s @`( date -u +"%s" )`
 endif	
 
+kill:
+ifeq '$(CONFIG_BOARD)' 'raspi-cam'
+	ssh pi@$(CONFIG_TARGET_IP) killall app || true
+endif
 
 run:
 ifeq '$(CONFIG_BOARD)' 'raspi-cam'

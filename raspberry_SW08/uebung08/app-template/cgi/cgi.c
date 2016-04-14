@@ -306,8 +306,8 @@ static OSC_ERR QueryApp()
 			}
 
 			F = fopen(IMG_FN, "wb");
-			gdImageGif(im_out, F);
-			//gdImageJpeg(im_out, F, 100);
+			//gdImageGif(im_out, F);	//Use huge gif!!!
+			gdImageJpeg(im_out, F, 70);	//Use jpeg with 70% quality
 			fclose(F);
 			gdImageDestroy(im_out);
 
