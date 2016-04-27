@@ -276,7 +276,7 @@ static OSC_ERR QueryApp()
 						{
 							gdFontPtr font = gdFontSmall;
 							struct IMG_STRING imgString;
-							memcpy(&imgString, pData+i, sizRect);
+							memcpy(&imgString, pData+i, sizString);
 							i += sizString;
 							//OscLog(DEBUG, "received string (%d,%d), font %d, %s, color(%d)\n", imgString.xPos, imgString.yPos, imgString.font, pData+i, imgString.color);
 							switch(imgString.font)
@@ -300,14 +300,15 @@ static OSC_ERR QueryApp()
 									break;//set in definition of font
 							}
 							gdImageString(im_out, font, imgString.xPos, imgString.yPos, pData+i, colorLoolUp(imgString.color));
+							i += imgString.len;
 						}
 					}
 				}
 			}
 
 			F = fopen(IMG_FN, "wb");
-			gdImageGif(im_out, F);
-			//gdImageJpeg(im_out, F, 100);
+			//gdImageGif(im_out, F);
+			gdImageJpeg(im_out, F, 80);
 			fclose(F);
 			gdImageDestroy(im_out);
 

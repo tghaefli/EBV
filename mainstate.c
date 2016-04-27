@@ -151,7 +151,7 @@ Msg const *MainState_top(MainState *me, Msg *msg)
 		data.AddBufSize = 0;
 		data.ipc.state.nExposureTime = 25;
 		data.ipc.state.nStepCounter = 0;
-		data.ipc.state.nThreshold = 0;
+		data.ipc.state.nThreshold = 30;
 		return 0;
 	case IPC_GET_APP_STATE_EVT:
 		/* Fill in the response and schedule an acknowledge for the request. */

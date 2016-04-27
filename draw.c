@@ -72,7 +72,7 @@ void DrawString(uint16 xPos, uint16 yPos, uint16 len, uint16 font, uint8 color, 
 	int dataSiz = data.AddBufSize;
 	struct IMG_STRING imgString;
 
-	if(dataSiz+2+sizString+len < IMG_SIZE) {//2byte for type
+	if(dataSiz+2+sizString+len+1 < IMG_SIZE) {//2byte for type
 		uint16 oType = OBJ_STRING;
 		memcpy(pData+dataSiz, &oType, sizeof(uint16));
 		dataSiz += sizeof(uint16);
@@ -82,7 +82,7 @@ void DrawString(uint16 xPos, uint16 yPos, uint16 len, uint16 font, uint8 color, 
 		imgString.font = font;
 		imgString.color = color;
 		memcpy(pData+dataSiz, &imgString, sizString);
-		dataSiz += sizLine;
+		dataSiz += sizString;
 		memcpy(pData+dataSiz, str, len);
 		dataSiz += len;
 		*(pData+dataSiz) = 0;//be sure that string is null terminated
