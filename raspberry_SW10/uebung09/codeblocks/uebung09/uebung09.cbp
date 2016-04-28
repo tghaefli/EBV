@@ -31,7 +31,14 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="main.c">
+		<Unit filename="../../app-template/Makefile" />
+		<Unit filename="../../app-template/main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../app-template/mainstate.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../app-template/process_frame.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Extensions>
