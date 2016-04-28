@@ -113,11 +113,8 @@ ifeq '$(CONFIG_BOARD)' 'raspi-cam'
 endif
 
 run:
-ifeq '$(CONFIG_BOARD)' 'raspi-cam'
+	ssh pi@$(CONFIG_TARGET_IP) chmod +x /home/pi/$(APP_NAME).app/run.sh /home/pi/$(APP_NAME).app/run.sh || true
 	ssh pi@$(CONFIG_TARGET_IP) /home/pi/$(APP_NAME).app/run.sh || true
-else
-	ssh root@$(CONFIG_TARGET_IP) /mnt/app/$(APP_NAME).app/run.sh || true
-endif
 
 install: cgi/cgi_host
 	cp -RL cgi/www/* /var/www

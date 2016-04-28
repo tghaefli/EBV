@@ -1,5 +1,6 @@
 clear 'all';
 close 'all';
+clc;
 
 Threshold = 25;%adjust threshold 
 
@@ -14,7 +15,7 @@ map=colormap(jet);
 map(1,:) = 0;
 
 for i0 = 1:NumFiles
-    ImageRead = imread(strcat(Folder, '\Image_', sprintf('%03d',i0),'.png'));
+    ImageRead = imread(strcat(Folder, '/Image_', sprintf('%03d',i0),'.png'));
     
     Image = double(ImageRead);
 
@@ -91,7 +92,7 @@ for i0 = 1:NumFiles
     figure(5)
     imshow(Angle, []);    
     colormap(map)
-    title(strcat('angle: ', num2str((ind-1)*45), '°'));
+    title(strcat('angle: ', num2str((ind-1)*45), 'ï¿½'));
     colorbar;
     
     %wait for one second (chose empty '' to wait till key is hit)
