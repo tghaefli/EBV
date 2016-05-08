@@ -21,13 +21,13 @@
 const int nc = OSC_CAM_MAX_IMAGE_WIDTH;
 const int nr = OSC_CAM_MAX_IMAGE_HEIGHT;
 
-const float avgFac = 0.95;
+//const float avgFac = 0.95;
 
 /* skip pixel at border */
 const int Border = 2;
 
 /* after this number of steps object is set to background */
-const int frgLimit = 100;
+//const int frgLimit = 100;
 
 /* minimum size of objects (sum of all pixels) */
 const int MinArea = 500*3;
@@ -42,7 +42,6 @@ struct OSC_VIS_REGIONS ImgRegions;/* these contain the foreground objects */
 
 int16 imgDx[IMG_SIZE];
 int16 imgDy[IMG_SIZE];
-uint16_t angle[4];
 
 /*
  *  Prototypes
@@ -165,7 +164,7 @@ void ProcessRegions(void)
                         angle -= M_PI;
 
 #if DEBUG > 4
-                    if(angle>M_PI || angle<0)
+                    if(angle > M_PI || angle < 0)
                         printf("%f\n",angle);
 #endif
 
@@ -193,6 +192,8 @@ void ProcessRegions(void)
             if(result[max] == 0)
                 printf("Binning failed");
 #endif
+
+            // Print correct String for each big box
             if(max == 0)
                 memcpy(text, "0 deg  ", 8);
             else if(max == 1)
@@ -209,8 +210,8 @@ void ProcessRegions(void)
                        GREEN,
                        text);
 
-        }   //endif loop over big areas
-    }
+        }   //endif Loop only over big boxes
+    }   // endif Loop over all boxes
 }
 
 /*
