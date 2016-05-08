@@ -170,12 +170,16 @@ void ProcessRegions(void)
 
                     if ((angle <= (M_PI_4 / 2)) && (angle >= 0))
                         result[0]++;
-                    if ((angle >= (1 * M_PI_4 / 2)) && (angle <= (3 * M_PI_4 / 2)))
+                    else if ((angle >= (1 * M_PI_4 / 2)) && (angle <= (3 * M_PI_4 / 2)))
                         result[1]++;
-                    if ((angle >= (3 * M_PI_4 / 2)) && (angle <= (5 * M_PI_4 / 2)))
+                    else if ((angle >= (3 * M_PI_4 / 2)) && (angle <= (5 * M_PI_4 / 2)))
                         result[2]++;
-                    if ((angle >= (5 * M_PI_4 / 2)) && (angle <= (7 * M_PI_4 / 2)))
+                    else if ((angle >= (5 * M_PI_4 / 2)) && (angle <= (7 * M_PI_4 / 2)))
                         result[3]++;
+					else if (angle <= M_PI)
+						result[0]++;
+					else
+						printf("ERROR!!, Binning out of bounds.\n");
                 }
                 curRun = curRun->next;
             }
