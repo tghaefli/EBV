@@ -67,13 +67,16 @@ void ProcessFrame()
     if(data.ipc.state.nStepCounter == 1)
     {
         //SetBackground();
-
+#if DEBUG_LVL >= 1
+        printf("App started\n");
+#endif
     }
     else
     {
         Derivative();
 
         // Disable because of performance issue
+        // We don't need an opening on the dI, because we only need Dx and Dy
         //Erode_3x3(THRESHOLD, INDEX0);
         //Dilate_3x3(INDEX0, THRESHOLD);  // Opening, remove noise
 
@@ -123,7 +126,7 @@ void Derivative()
             imgDx[r+c] = (int16) dx;
             imgDy[r+c] = (int16) dy;
 
-#if DEBUG_LVL > 5
+#if DEBUG_LVL >= 5
             printf("dx is %i\n",dx);
             printf("dy is %i\n",dy);
 #endif
@@ -141,7 +144,7 @@ void ProcessRegions(void)
 {
     char text[8];
     double angle;
-    for(uint16 i = 0; i < ImgRegions.noOfObjects; i++)  // Loop over all boxes
+    for(uint8_t i = 0; i < ImgRegions.noOfObjects; i++)  // Loop over all boxes
     {
         uint16_t result[4] = {0,0,0,0};
         memcpy(text, "          ", 8);
@@ -163,7 +166,7 @@ void ProcessRegions(void)
                     else if(angle > M_PI)
                         angle -= M_PI;
 
-#if DEBUG > 4
+#if DEBUG >= 4
                     if(angle > M_PI || angle < 0)
                         printf("%f\n",angle);
 #endif
@@ -185,16 +188,19 @@ void ProcessRegions(void)
             }
 
             //Calc the most common angle
-            int max = 0;
+            uint16_t max = 0;
             for(uint16 x=0; x<4; x++)
             {
+#if DEBUG_LVL >= 1
+                printf("angle %i has %i elements\n",x, result[x]);
+#endif
                 if(result[x] > result[max])
                     max = x;
             }
 
-#if DEBUG_LVL > 0
+#if DEBUG_LVL >= 1
             if(result[max] == 0)
-                printf("Binning failed");
+                printf("Binning failed\n");
 #endif
 
             // Print correct String for each big box
@@ -246,9 +252,9 @@ void Erode_3x3(int InIndex, int OutIndex)
         for(c = Border; c < (nc-Border); c++)
         {
             unsigned char* p = &data.u8TempImage[InIndex][r+c];
-            data.u8TempImage[OutIndex][r+c] = *(p-nc-1) & *(p-nc) & *(p-nc+1) &
-                                              *(p-1)    & *p      & *(p+1)    &
-                                              *(p+nc-1) & *(p+nc) & *(p+nc+1);
+            data.u8TempImage[BACKGROUND][r+c] = *(p-nc-1) & *(p-nc) & *(p-nc+1) &
+                                                *(p-1)    & *p      & *(p+1)    &
+                                                *(p+nc-1) & *(p+nc) & *(p+nc+1);
         }
     }
 }
@@ -262,13 +268,13 @@ void Dilate_3x3(int InIndex, int OutIndex)
         for(c = Border; c < (nc-Border); c++)
         {
             unsigned char* p = &data.u8TempImage[InIndex][r+c];
-            data.u8TempImage[OutIndex][r+c] = *(p-nc-1) | *(p-nc) | *(p-nc+1) |
-                                              *(p-1)    | *p      | *(p+1)    |
-                                              *(p+nc-1) | *(p+nc) | *(p+nc+1);
+            // From OutIndex --> BACKGROUND
+            data.u8TempImage[BACKGROUND][r+c] = *(p-nc-1) | *(p-nc) | *(p-nc+1) |
+                                                *(p-1)    | *p      | *(p+1)    |
+                                                *(p+nc-1) | *(p+nc) | *(p+nc+1);
         }
     }
 }
-
 
 void DetectRegions()
 {
