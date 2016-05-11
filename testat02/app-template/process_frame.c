@@ -31,7 +31,7 @@ const int Border = 2;
 
 /* minimum size of objects (sum of all pixels) */
 const int MinArea = 500*3;
-char txt_testat[] = "Testat 2 Pascal Haefliger";
+char txt_testat[] = "Testat 2 Pascal Haefliger, Fabian Niederberger";
 
 /*
  * VARIABLES
@@ -146,11 +146,11 @@ void ProcessRegions(void)
     double angle;
     for(uint8_t i = 0; i < ImgRegions.noOfObjects; i++)  // Loop over all boxes
     {
-        uint16_t result[4] = {0,0,0,0};
-        memcpy(text, "          ", 8);
 
         if(ImgRegions.objects[i].area > MinArea)    // Loop only over big boxes
         {
+            uint16_t result[4] = {0,0,0,0};
+            memcpy(text, "          ", 8);
             struct OSC_VIS_REGIONS_RUN* curRun = ImgRegions.objects[i].root;
 
             while(curRun != NULL)
@@ -252,7 +252,8 @@ void Erode_3x3(int InIndex, int OutIndex)
         for(c = Border; c < (nc-Border); c++)
         {
             unsigned char* p = &data.u8TempImage[InIndex][r+c];
-            data.u8TempImage[BACKGROUND][r+c] = *(p-nc-1) & *(p-nc) & *(p-nc+1) &
+            // From OutIndex --> BACKGROUND
+            data.u8TempImage[OutIndex][r+c] = *(p-nc-1) & *(p-nc) & *(p-nc+1) &
                                                 *(p-1)    & *p      & *(p+1)    &
                                                 *(p+nc-1) & *(p+nc) & *(p+nc+1);
         }
@@ -269,7 +270,7 @@ void Dilate_3x3(int InIndex, int OutIndex)
         {
             unsigned char* p = &data.u8TempImage[InIndex][r+c];
             // From OutIndex --> BACKGROUND
-            data.u8TempImage[BACKGROUND][r+c] = *(p-nc-1) | *(p-nc) | *(p-nc+1) |
+            data.u8TempImage[OutIndex][r+c] = *(p-nc-1) | *(p-nc) | *(p-nc+1) |
                                                 *(p-1)    | *p      | *(p+1)    |
                                                 *(p+nc-1) | *(p+nc) | *(p+nc+1);
         }

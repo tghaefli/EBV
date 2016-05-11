@@ -110,7 +110,7 @@ endif
 kill:
 ifeq '$(CONFIG_BOARD)' 'raspi-cam'
 	ssh pi@$(CONFIG_TARGET_IP) killall app || true
-	ssh pi@$(CONFIG_TARGET_IP) killall cgi || true
+	ssh pi@$(CONFIG_TARGET_IP) sudo killall cgi || true
 endif
 
 run:
