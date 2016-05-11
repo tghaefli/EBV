@@ -144,13 +144,14 @@ void ProcessRegions(void)
 {
     char text[8];
     double angle;
-    for(uint8_t i = 0; i < ImgRegions.noOfObjects; i++)  // Loop over all boxes
+    for(uint16_t i = 0; i < ImgRegions.noOfObjects; i++)  // Loop over all boxes
     {
 
         if(ImgRegions.objects[i].area > MinArea)    // Loop only over big boxes
         {
             uint16_t result[4] = {0,0,0,0};
             memcpy(text, "          ", 8);
+
             struct OSC_VIS_REGIONS_RUN* curRun = ImgRegions.objects[i].root;
 
             while(curRun != NULL)
