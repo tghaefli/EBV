@@ -1,6 +1,6 @@
 % Hough transformation
-clear 'all';
-close 'all';
+clear all;  close all;  clc;
+
 
 %the interior of the circles must be lighter; otherwise set Invert -> 1
 Invert = 1;
@@ -9,8 +9,8 @@ useReal = 1;
 %a synthetic image can be used for testing
 if useReal == 1
     %read image
-    Image = imread('..\uebung04\kugeln.png');
-    %Image = imread('..\uebung06\coins.png');
+    Image = imread('../uebung04/kugeln.png');
+    %Image = imread('../uebung06/coins.png');
 else    
     %empty image
     Image = zeros(100,150);

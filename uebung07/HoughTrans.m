@@ -1,8 +1,7 @@
 %
 % Hough transformation
 %
-clear 'all';
-close 'all'
+clear all;  close all;  clc;
 
 %read image
 
@@ -10,11 +9,11 @@ close 'all'
 useReal = 1;
 %we can use a simple generated image for testing
 if useReal == 1
-    Image = imread('..\uebung01\London.png');
+    Image = imread('../uebung01/London.png');
 else
     %
     Image = zeros(100,200);    
-    % Objekte hinzufüge
+    % Objekte hinzufï¿½ge
     Image([10:40],[20:40]) = 1;
     Image = mat2gray(Image);
     %may rotate

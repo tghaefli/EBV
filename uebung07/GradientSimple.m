@@ -1,8 +1,7 @@
-clear 'all'
-close 'all'
+clear all;  close all;  clc;
 
 %read image
-Image = imread('..\uebung01\London.png');
+Image = imread('../uebung01/London.png');
 %transform to double to once and for all
 Image = double(Image);
 
