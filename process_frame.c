@@ -20,41 +20,44 @@ const int nr = OSC_CAM_MAX_IMAGE_HEIGHT;
 
 int TextColor;
 
-float bgrImg[IMG_SIZE];
-
-const float avgFac = 0.95;
-
 /* skip pixel at border */
 const int Border = 2;
 
-/* after this number of steps object is set to background */
-const int frgLimit = 100;
+/* used to store values for derivatives */
+int16 imgDx[IMG_SIZE];
+int16 imgDy[IMG_SIZE];
 
 /* minimum size of objects (sum of all pixels) */
 const int MinArea = 500;
 
+/* the number of angle bins used */
+const int NumBins = 4;
+
 struct OSC_VIS_REGIONS ImgRegions;/* these contain the foreground objects */
 
 void ChangeDetection();
-void SetBackground();
 void Erode_3x3(int InIndex, int OutIndex);
 void Dilate_3x3(int InIndex, int OutIndex);
 void DetectRegions();
+void ClusterAngles();
 void DrawBoundingBoxes();
+
 
 void ResetProcess()
 {
-	SetBackground();
+
 }
 
 
 void ProcessFrame()
 {
+	uint32 t1, t2;
 	//initialize counters
 	if(data.ipc.state.nStepCounter == 1) {
-		SetBackground();
 
 	} else {
+		//example for time measurement
+		t1 = OscSupCycGet();
 
 		ChangeDetection();
 
@@ -63,12 +66,21 @@ void ProcessFrame()
 
 		DetectRegions();
 
+		ClusterAngles();
+
 		DrawBoundingBoxes();
+
+		//example for time measurement
+		t2 = OscSupCycGet();
+
+		//example for log output to console
+		OscLog(INFO, "required = %d us\n", OscSupCycToMicroSecs(t2-t1));
 	}
 }
 
 void ChangeDetection() {
 	int r, c;
+	/* angle threshold */
 	//set result buffer to zero
 	memset(data.u8TempImage[THRESHOLD], 0, IMG_SIZE);
 
@@ -76,47 +88,31 @@ void ChangeDetection() {
 	for(r = Border*nc; r < (nr-Border)*nc; r += nc) {
 		//loop over the columns
 		for(c = Border; c < (nc-Border); c++) {
-			float pImg = data.u8TempImage[SENSORIMG][r+c];
-			float pBgr = bgrImg[r+c];
-			float Dif = fabs(pImg-pBgr);
+			/* do pointer arithmetics with respect to center pixel location */
+			unsigned char* p = &data.u8TempImage[SENSORIMG][r+c];
 
-			//if the difference is larger than threshold value (can be changed on web interface)
-			if(Dif > data.ipc.state.nThreshold) {
-				//set pixel value to 255 in BACKGROUND image (only the blue plane)
+			/* implement Sobel filter in x-direction */
+			int dx =    -(int) *(p-nc-1) + (int) *(p-nc+1)
+					 -2* (int) *(p-1) + 2* (int) *(p+1)
+						-(int) *(p+nc-1) + (int) *(p+nc+1);
+
+			/* implement Sobel filter in y-direction */
+			int dy =    -(int) *(p-nc-1) -2* (int) *(p-nc) - (int) *(p-nc+1)
+						+(int) *(p+nc-1) +2* (int) *(p+nc) + (int) *(p+nc+1);
+
+			/* check if norm is larger than threshold */
+			int df_sq = dx*dx+dy*dy;
+			int thr_sq = data.ipc.state.nThreshold*data.ipc.state.nThreshold;
+
+			if(df_sq > thr_sq) {//avoid square root
+				//set pixel value to 255 in THRESHOLD image
 				data.u8TempImage[THRESHOLD][r+c] = 255;
-				//increase foreground counter
-				data.u8TempImage[INDEX1][r+c]++;
-				//check whether limit is reached
-				if(data.u8TempImage[INDEX1][r+c] == frgLimit) {
-					//set pixel to background
-					bgrImg[r+c] = (float) data.u8TempImage[SENSORIMG][r+c];
-					data.u8TempImage[INDEX1][r+c] = 0;
-				}
-			} else {
-				// update background image
-				bgrImg[r+c] = avgFac*bgrImg[r+c] + (1-avgFac)*(float) data.u8TempImage[SENSORIMG][r+c];
-				// set value for display
-				data.u8TempImage[BACKGROUND][r+c] = (unsigned char) bgrImg[r+c];
-				//set foreground counter to zero
-				data.u8TempImage[INDEX1][r+c] = 1;
 			}
+			//store derivatives (int16 is enough)
+			imgDx[r+c] = (int16) dx;
+			imgDy[r+c] = (int16) dy;
 		}
 	}
-}
-
-
-void SetBackground() {
-	int r, c;
-
-	//loop over the rows
-	for(r = Border*nc; r < (nr-Border)*nc; r += nc) {
-		//loop over the columns
-		for(c = Border; c < (nc-Border); c++) {
-			bgrImg[r+c] = (float) data.u8TempImage[SENSORIMG][r+c];
-		}
-	}
-	//set all counters to zero
-	memset(data.u8TempImage[INDEX1], 0, IMG_SIZE);
 }
 
 
@@ -167,6 +163,59 @@ void DetectRegions() {
 	//now do region labeling and feature extraction
 	OscVisLabelBinary( &Pic, &ImgRegions);
 	OscVisGetRegionProperties( &ImgRegions);
+}
+
+
+void ClusterAngles() {
+	int o, c;
+
+	memset(data.u8TempImage[BACKGROUND], 0, IMG_SIZE);
+
+	for(o = 0; o < ImgRegions.noOfObjects; o++) {
+		//only treat objects above the minimum size
+		if(ImgRegions.objects[o].area > MinArea) {
+			int angleBins[NumBins];
+			memset(angleBins, 0, sizeof(angleBins));
+			//a vision region is a connected horizontal block [startColumn endColumn] at the given row
+			struct OSC_VIS_REGIONS_RUN* currentRun = ImgRegions.objects[o].root;
+
+			do {
+				for(c = currentRun->startColumn; c <= currentRun->endColumn; c++) {
+					int r = currentRun->row;
+					double angle = atan2(imgDy[r*nc+c], imgDx[r*nc+c]);
+					double angleD = M_PI/NumBins;
+
+					if(angle < 0) {
+						angle = angle+M_PI;
+					}
+					//angle binning
+					int bin = ((int) ((angle/angleD)+0.5))%NumBins;
+					angleBins[bin]++;
+					//for visualization in BACKGROUND image
+					data.u8TempImage[BACKGROUND][r*nc+c] = (uint8) (255.*angle/M_PI);
+				}
+				currentRun = currentRun->next;
+			} while(currentRun != NULL);
+
+			//find bin maximum
+			int binMax = 0;
+			int valMax = angleBins[0];
+			int b;
+			for(b = 1; b < NumBins; b++) {
+				if(valMax < angleBins[b]) {
+					binMax = b;
+					valMax = angleBins[b];
+				}
+			}
+			//output result
+			char outText[100];
+
+			int len = sprintf(outText, "A=%d, w=%d", ImgRegions.objects[o].area, (binMax*180)/NumBins);
+			DrawString(ImgRegions.objects[o].centroidX, ImgRegions.objects[o].centroidY, len, MEDIUMBOLD, RED, outText);
+
+			//OscLog(INFO, "(x,y)=(%d,%d)\n", len, binMax);
+		}
+	}
 }
 
 
