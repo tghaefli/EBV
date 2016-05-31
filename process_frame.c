@@ -28,10 +28,12 @@ int16 imgDx[IMG_SIZE];
 int16 imgDy[IMG_SIZE];
 
 /* minimum size of objects (sum of all pixels) */
-const int MinArea = 500;
+const int MinArea = 150;
+const int MaxArea = 1500;
+const char Characters[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 /* the number of angle bins used */
-const int NumBins = 4;
+const int NumAngleBins = 8;
 
 struct OSC_VIS_REGIONS ImgRegions;/* these contain the foreground objects */
 
@@ -172,10 +174,11 @@ void ClusterAngles() {
 	memset(data.u8TempImage[BACKGROUND], 0, IMG_SIZE);
 
 	for(o = 0; o < ImgRegions.noOfObjects; o++) {
+		//short cut for box's height and width
+		int BoxHeight = ImgRegions.objects[o].bboxBottom-ImgRegions.objects[o].bboxTop;
+		int BoxWidth = ImgRegions.objects[o].bboxRight-ImgRegions.objects[o].bboxLeft;
 		//only treat objects above the minimum size
-		if(ImgRegions.objects[o].area > MinArea) {
-			int angleBins[NumBins];
-			memset(angleBins, 0, sizeof(angleBins));
+		if((ImgRegions.objects[o].area > MinArea) && (ImgRegions.objects[o].area < MaxArea)) {
 			//a vision region is a connected horizontal block [startColumn endColumn] at the given row
 			struct OSC_VIS_REGIONS_RUN* currentRun = ImgRegions.objects[o].root;
 
@@ -183,35 +186,33 @@ void ClusterAngles() {
 				for(c = currentRun->startColumn; c <= currentRun->endColumn; c++) {
 					int r = currentRun->row;
 					double angle = atan2(imgDy[r*nc+c], imgDx[r*nc+c]);
-					double angleD = M_PI/NumBins;
+					double angleD = 2.*M_PI/NumAngleBins;
 
-					if(angle < 0) {
-						angle = angle+M_PI;
-					}
 					//angle binning
-					int bin = ((int) ((angle/angleD)+0.5))%NumBins;
-					angleBins[bin]++;
+					int dir = ((int) ((angle/angleD)+0.5))%NumAngleBins;
+
+					/***************************************/
+					/* here implement binning in 6 regions */
+					/* and construction of feature vector  */
+					/***************************************/
+
 					//for visualization in BACKGROUND image
-					data.u8TempImage[BACKGROUND][r*nc+c] = (uint8) (255.*angle/M_PI);
+					data.u8TempImage[BACKGROUND][r*nc+c] = (uint8) (255.*(1+dir)/NumAngleBins);
 				}
 				currentRun = currentRun->next;
 			} while(currentRun != NULL);
 
-			//find bin maximum
-			int binMax = 0;
-			int valMax = angleBins[0];
-			int b;
-			for(b = 1; b < NumBins; b++) {
-				if(valMax < angleBins[b]) {
-					binMax = b;
-					valMax = angleBins[b];
-				}
-			}
-			//output result
-			char outText[100];
+			/*******************************************/
+			/* here implement normalization of feature */
+			/* vector and determination of best match  */
+			/*******************************************/
 
-			int len = sprintf(outText, "A=%d, w=%d", ImgRegions.objects[o].area, (binMax*180)/NumBins);
-			DrawString(ImgRegions.objects[o].centroidX, ImgRegions.objects[o].centroidY, len, MEDIUMBOLD, RED, outText);
+			//output result
+			char outText[2];              /****************************************/
+			outText[0] = Characters[o%26];/* replace example output by best match */
+			outText[1] = 0;               /****************************************/
+
+			DrawString(ImgRegions.objects[o].centroidX, ImgRegions.objects[o].bboxBottom, 2, LARGE, GREEN, outText);
 
 			//OscLog(INFO, "(x,y)=(%d,%d)\n", len, binMax);
 		}
@@ -222,7 +223,7 @@ void ClusterAngles() {
 void DrawBoundingBoxes() {
 	uint16 o;
 	for(o = 0; o < ImgRegions.noOfObjects; o++) {
-		if(ImgRegions.objects[o].area > MinArea) {
+		if((ImgRegions.objects[o].area > MinArea) && (ImgRegions.objects[o].area < MaxArea)) {
 			DrawBoundingBox(ImgRegions.objects[o].bboxLeft, ImgRegions.objects[o].bboxTop,
 							ImgRegions.objects[o].bboxRight, ImgRegions.objects[o].bboxBottom, false, GREEN);
 		}
