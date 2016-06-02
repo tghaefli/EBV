@@ -1,4 +1,4 @@
-clear all;  close all;
+clear all;  close all;  clc;
 
 %we have a rows of 26 numbers in the image
 NumEntries = 26;

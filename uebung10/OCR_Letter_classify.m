@@ -1,4 +1,4 @@
-clear all;  close all;
+clear all;  close all;  clc;
 
 Letter = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 ClassVectors = load('./OCR_Train/ClassVectors_Letter.dat');
