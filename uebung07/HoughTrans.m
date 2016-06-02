@@ -35,7 +35,15 @@ imshow(EdgeCanny, []);
 title('Canny edge detection');
 
 % Hough transformation, calculate the accumulator Hough
-[Hough, Alpha, Rho] = hough(EdgeCanny);
+%[Hough, Alpha, Rho] = hough(EdgeCanny);     % Haftransformation
+[Hough, Alpha, Rho] = hough(EdgeCanny, 'RhoResolution', 2, 'ThetaResolution', 0.2);     % Haftransformation
+%Alpha: Von -90° bis 89°
+% Roh:  Von -sqrt(size_x^2 + size_y^2) bis sqrt(size_x^2 + size_y^2)
+
+% Manually change accumulator for test purpose
+%Hough(300, 300) = 400;
+
+
 figure(2)
 imshow(mat2gray(Hough));
 colormap('hot');
@@ -46,21 +54,22 @@ title('Hough Accumulator');
 % Find at most 5 peaks with threshold 15 and minimim distance of 15, 15
 % pixel
 NumPeaks = 5;
-HoughPeaks = [];%?????????????
+HoughPeaks = houghpeaks(Hough, NumPeaks); %????????????? houghpeaks()
 
 % Find the lines that correspond to the peaks; fill gabs of 15 pixel and
 % suppress all (merged lines) that have a length less than 30 pixel
-Lines = [];%????????????
+Lines = houghlines(EdgeCanny, Alpha, Rho, HoughPeaks);%???????????? houghlines()
 figure(3)
 imshow(Image);
 title('original image with hough lines');
 hold on;
 
+% Draw Lines an d
 for k = 1:length(Lines)
     XY = [Lines(k).point1; Lines(k).point2];
     line(XY(:,1),XY(:,2),'LineWidth',2,'Color','red');
     XY = (Lines(k).point1+Lines(k).point2)/2;
-    TheText = sprintf('rho = %d, alpha = %d', Lines(k).rho, Lines(k).theta);
+    TheText = sprintf('rho = %d, alpha = %2.2f', Lines(k).rho, Lines(k).theta);
     text(XY(1), XY(2), TheText, 'BackgroundColor',[.7 .7 .7]);
 end
  

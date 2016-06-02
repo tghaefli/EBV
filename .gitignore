@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /leanx/*
 *.asv
 *.swp
@@ -6,3 +7,21 @@
 Autobahn.zip
 */Autobahn/*
 testat01_Pascal_Haefliger.zip
+=======
+# working files.
+/osc_log
+/osc_simlog
+/gpio_out.txt
+*~
+
+# generated files
+*.gdb
+*_host
+*_target
+*.app
+
+# files used by the build system
+/build
+/oscar
+/.config
+>>>>>>> 97f572eec5c9f47236a784162bccf02444dc1e66

@@ -1,5 +1,5 @@
-clear 'all'
-close 'all'
+clear all;  close all;  clc;
+
 %read image
 Image = imread('blue.jpg');
 %read background
@@ -16,14 +16,32 @@ Red = Image(:,:,1);
 Green = Image(:,:,2);
 Blue = Image(:,:,3);
 
+%figure(1)
+%subplot(3,1,1)
+%imshow(Red, []);
+%subplot(3,1,2)
+%imshow(Green, [])
+%subplot(3,1,3)
+%imshow(Blue, []);
+
+
+
+
 %from the imtool we found a transparency (blue) color in rgb space
-%TrCol = [?? ?? ??];
+TrCol = [80 100 220];
 
 %choose limit values using imtools and some trial and error
-%LimitVal = ?????;
+LimitVal = 100;
 
 %find the 2D indices of all pixel with distance smaller than LimitVal
-IndexImg = false(Sy,Sx);%???????????????????????
+sphere = 1;
+if sphere
+    IndexImg = (Red-TrCol(1)).^2 + (Green-TrCol(2)).^2 + (Blue-TrCol(3)).^2 < LimitVal.^2;
+else
+    IndexImg =  (abs(Red-TrCol(1))<LimitVal) & ...
+                (abs(Green-TrCol(2))<LimitVal) & ...
+                (abs(Blue-TrCol(3))<LimitVal);
+end     
 
 %do the merge of the two images
 RedBkgr = ImageBackground(:,:,1);
@@ -82,13 +100,16 @@ title('RGB color space with background pixel position')
 
 
 
-
-return
+%return
+%%
+close all;  clear all;  clc;
 
 %now we do the same thing using the ycbcr color space
 
 %read image again: YCbCr CONVERSION OF DOUBLE IMAGE DOES NOT WORK CORRECTLY
 Image = imread('blue.jpg');
+%read background
+ImageBackground = imread('back.jpg');
 
 %transform to YCbCr space
 ImageYCbCr = rgb2ycbcr(Image);
@@ -102,13 +123,18 @@ Cb = ImageYCbCr(:,:,2);
 Cr = ImageYCbCr(:,:,3);
 
 %from the figure 1 we found a transparency (blue) color (only Cb Cr)
-%TrCol = [??? ???];
+TrCol = [240 0];
 
 %choose limit values using imtools and some trial and error
-%LimitVal = 30;
+LimitVal = 150;
 
 %find the 2D indices of all pixel with distance larger than LimitVal
-IndexImg = false(Sy,Sx);%?????????????????????????????
+sphere = 1;
+if sphere
+    IndexImg = (Cb-TrCol(1)).^2 + (Cr-TrCol(2)).^2 < LimitVal.^2;
+else
+    IndexImg = (abs(Cb-TrCol(1))<LimitVal) & (abs(Cr-TrCol(2))<LimitVal);
+end 
 
 %extract color planes
 Red = Image(:,:,1);

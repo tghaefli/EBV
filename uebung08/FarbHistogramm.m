@@ -1,5 +1,5 @@
-clear 'all'
-close 'all'
+clear all;  close all;  clc;
+
 
 %read template
 ImageCar = imread('carTest.bmp');
@@ -54,5 +54,5 @@ for Fig = 1:length(Images)
         ylabel('y');
         zlabel('arbitrary units')        
     end
-    pause();
+    pause(1);
 end

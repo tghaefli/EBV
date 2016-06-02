@@ -43,22 +43,22 @@ title(char(Title));
 
 %upper and lower threshold for edge detection (relative to max gradient
 %value)
-Threshold = [0.0 0.05];
+Threshold = [0.0 0.15];
 %width of Gaussian
-Sigma = 1;
-%apply a certain threshold
-EdgeCanny = EdgeImage;%??????
+Sigma = 0.1;
+%apply a canny filter
+EdgeCanny = edge(Image,'canny',Threshold,Sigma);%??????
 %plot it
 figure(2)
 subplot(1,2,1);
 imshow(EdgeCanny, []);
-Title = sprintf('Canny edge detection with thresholds: [%1.2f,%1.2f] and sigma %2.2f', Threshold(1), Threshold(2), Sigma);
+Title = sprintf('Canny edge detection with thresholds: [%1.4f,%1.4f] and sigma %2.2f', Threshold(1), Threshold(2), Sigma);
 title(char(Title));
 
-Threshold = [0.0 0.0015];
+Threshold = [0.0 0.15];
 Sigma = 1;
-%apply a certain threshold
-EdgeCanny = EdgeImage;%??????
+%apply a canny filter
+EdgeCanny = edge(Image,'canny',Threshold,Sigma);%??????
 %plot it
 figure(2)
 subplot(1,2,2);

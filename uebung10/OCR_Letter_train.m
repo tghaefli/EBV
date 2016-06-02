@@ -1,5 +1,20 @@
 clear all;  close all;  clc;
 
+
+
+%           
+%   y_low   ________________
+%           |       |       |
+%   y_med   |_______|_______|
+%           |       |       |
+%   y_up    |_______|_______|
+%           |       |       |
+%   x_low   |_______|_______|  
+%                 x_up    
+%
+%
+
+
 %we have a rows of 26 numbers in the image
 NumEntries = 26;
 Letter = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ......';
@@ -20,7 +35,7 @@ LimitDf = 30;
 
 ClassVectors = zeros(NumEntries,AngleBins*6);%AngleBins directions with 6 sectors 
 
-for Index = 1:8
+for Index = 1:8     % Interate trough all fonts
     %read image
     Image = imread(strcat('./OCR_Train/OCR_Letter', sprintf('%02d', Index), '.png'));
     if size(Image,3) == 3
@@ -28,7 +43,8 @@ for Index = 1:8
     end
 
     %plot the image
-    figure(Index);subplot(3,1,1);
+    figure(Index);
+    subplot(3,1,1);
     imshow(Image);
     title('Original');
 

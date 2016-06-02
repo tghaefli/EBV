@@ -32,9 +32,9 @@ subplot(2,2,2);
 imshow(ImageDr, []);
 title('dI/dr');
 
-Threshold = 40;
+Threshold = 20;
 %apply a certain threshold ????????
-EdgeImage = ImageDr;
+EdgeImage = ImageDr > Threshold;
 %plot it
 subplot(2,2,3);
 imshow(EdgeImage, []);
@@ -44,7 +44,7 @@ title(char(Title));
 
 Threshold = 60;
 %apply a certain threshold ????????
-EdgeImage = ImageDr;
+EdgeImage = ImageDr > Threshold;
 %plot it
 subplot(2,2,4);
 imshow(EdgeImage, []);

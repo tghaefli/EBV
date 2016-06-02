@@ -17,7 +17,7 @@ SubImg = uint8(zeros(size(Template)));
 Rsub = 1;
 for Rows = 1:Increment:ImageHeight-TemplateHeight 
     %display the progress (rather slow :-|
-    disp(Rows)
+    disp(Rows);
     %loop over cols
     Csub = 1;
 	for Cols = 1:Increment:ImageWidth-TemplateWidth        
@@ -25,7 +25,9 @@ for Rows = 1:Increment:ImageHeight-TemplateHeight
         % where hist1 is the template histogram and hist2 is the histogram
         % at the current image position (Rows, Cols) having the same size
         % as the template hist
-        CorrImage(Rsub, Csub) = 0;%%% ?????????????? 
+        SubImg = Image(Rows:Rows+TemplateHeight-1, Cols:Cols+TemplateWidth-1, :);
+        Hist = Farbhist(SubImg, Bins);
+        CorrImage(Rsub, Csub) = DistFunction(Hist, TemplateHist);
         Csub = Csub+1;
     end
     Rsub = Rsub+1;
@@ -39,5 +41,3 @@ end
 %return the max position
 MaxPosition = [MaxRowIndex(MaxColIndex), MaxColIndex]*Increment;
 end
-
-
