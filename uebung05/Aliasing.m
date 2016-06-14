@@ -16,7 +16,8 @@ figure(2)
 %do sampling
 ImageAlias = Image(1:DownSampling:end, 1:DownSampling:end);   
 %plot it (may scale up)
-imshow(ImageAlias, 'InitialMagnification', 100);
+%imshow(ImageAlias, 'InitialMagnification', 100);
+imshow(ImageAlias);
 title('Moiree pattern due to Aliasing');
 xlabel(['downsampling with N=' num2str(DownSampling)]);
 
@@ -24,6 +25,9 @@ xlabel(['downsampling with N=' num2str(DownSampling)]);
 Mask = fspecial('average', N);%???????
 Mask = fspecial('gaussian', N, N);%???????
 
+%Mask = 1/16 * [1 2 1 ;
+%               2 4 2 ;
+%               1 2 1];
 
 %first apply filter
 ImageDecimate = imfilter(Image,Mask);
@@ -31,7 +35,8 @@ ImageDecimate = imfilter(Image,Mask);
 ImageDecimate = ImageDecimate(1:DownSampling:end, 1:DownSampling:end);
 %and plot
 figure(3)
-imshow(ImageDecimate, 'InitialMagnification', 100);
+%imshow(ImageDecimate, 'InitialMagnification', 100);
+imshow(ImageDecimate);
 title('no Moiree pattern due to anti Aliasing filter');
 xlabel(['downsampling with N=' num2str(DownSampling)]);
 
