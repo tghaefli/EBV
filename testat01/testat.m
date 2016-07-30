@@ -9,18 +9,17 @@ close all; clear all; clc;
 Path = './Images/Image_';
 Nr = 003;
 FileName = strcat(Path, sprintf('%03d', Nr), '.png');
-Img = uint8(imread(FileName));
+Img = double(imread(FileName));
+
+Img = Img(200:310,220:350);
 
 
 
 % ************************ OPTIONS ************************
 options = struct();
 options.FilterType = 'Prewitt';
-options.Th_deriv = 15;			% Top    right  picture
-options.Dim_Morph = 4;			% Bottom left  picture
-options.Closing = 'false';		% Bottom right picture
-options.Closing_Dim = 10;		%   --> Imporve skeleton drawing
-
+options.Th_deriv = 25;			% Top    right  picture
+options.Dim_Morph = 3;			% Bottom left  picture
 
 
 % ********************* CALL FUNCTION *********************
@@ -59,14 +58,14 @@ drawnow();
 
 
 %% ************************ TEST ************************
-for Nr=1:15
+%for Nr=1:15
+%
+%    FileName = strcat(Path, sprintf('%03d', Nr), '.png');
+%    Img = uint8(imread(FileName));
+%    A = angle_detection(Img, options);
+%
+%    res(Nr,1) = Nr;
+%    res(Nr,2) = A.Angle;
+%end
 
-    FileName = strcat(Path, sprintf('%03d', Nr), '.png');
-    Img = uint8(imread(FileName));
-    A = angle_detection(Img, options);
-
-    res(Nr,1) = Nr;
-    res(Nr,2) = A.Angle;
-end
-
-res
+%res

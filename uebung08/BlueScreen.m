@@ -28,7 +28,7 @@ Blue = Image(:,:,3);
 
 
 %from the imtool we found a transparency (blue) color in rgb space
-TrCol = [80 100 220];
+TrCol = [80 100 220];   %[R G B]
 
 %choose limit values using imtools and some trial and error
 LimitVal = 100;

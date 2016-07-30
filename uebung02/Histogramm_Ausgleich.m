@@ -29,7 +29,7 @@ ylabel('cumulated frequency');
 
 
 %LUT for histogram equalization
-[s1, s2] = size(Image);
+%[s1, s2] = size(Image);
 
 LUT_Equ = uint8(ones(256,1).*(CumHist*255));%???????????????????
 %apply LUT

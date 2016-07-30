@@ -18,7 +18,7 @@ subplot(3,1,2);
 imshow(EdgeCanny, []);
 title('Canny edge detection');
 
-freezeColors ;
+%freezeColors ;
 
 figure(2)
 hold on
@@ -32,7 +32,7 @@ ylabel('Rho')
 title('Hough Accumulator');
 
 hold off
-unfreezeColors;
+%unfreezeColors;
 
 % Find at most 2 peaks with threshold 15 and minimim distance of 15, 15
 % pixel

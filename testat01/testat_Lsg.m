@@ -14,8 +14,10 @@ NumBins = 4;
 map=colormap(jet);
 map(1,:) = 0;
 
-for i0 = 1:NumFiles
-    ImageRead = imread(strcat(Folder, '/Image_', sprintf('%03d',i0),'.png'));
+i0 = 003;
+ImageRead = imread(strcat(Folder, '/Image_', sprintf('%03d',i0),'.png'));
+%for i0 = 1:NumFiles
+%    ImageRead = imread(strcat(Folder, '/Image_', sprintf('%03d',i0),'.png'));
     
     Image = double(ImageRead);
 
@@ -44,7 +46,7 @@ for i0 = 1:NumFiles
     ImageThr = ImageDr > Threshold;
     %plot it
     figure(2);
-    imshow(ImageThr, []);
+    imshow(uint8(ImageThr), []);
     title('dI/dr');
 
     StrucElem = strel('square', 3);
@@ -54,7 +56,7 @@ for i0 = 1:NumFiles
 
     %plot 
     figure(3);
-    imshow(ImageClose);
+    imshow(uint8(ImageClose));
     title('Morphologie');       
 
     %determine skeleton
@@ -96,5 +98,5 @@ for i0 = 1:NumFiles
     colorbar;
     
     %wait for one second (chose empty '' to wait till key is hit)
-    pause();
-end
+    %pause();
+%end

@@ -2,7 +2,8 @@ clear 'all';
 close 'all';
 
 %path were pictures are stored
-Path = '..\uebung02\Autobahn\img_';
+%Path = '..\uebung02\Autobahn\img_';
+Path = '.\img_';
 %this is the delta of the step
 Delta = 1;
 
